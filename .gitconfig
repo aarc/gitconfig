@@ -1,0 +1,61 @@
+[alias]
+  co = checkout
+  # checkout new branch
+  cob = co -b 
+  nb = cob
+
+  # checkout common branches
+  cod = co develop
+  com = co main
+  coms = co master
+  
+  ci = commit
+  # commit with message, no verify
+  cm = "!f() { git ci -m \"$1\" --no-verify; }; f"
+  # commit ALL with message, no verify
+  cma = "!f() { git ci -a -m \"$1\" --no-verify; }; f"
+
+  st = status
+  br = branch
+
+  # print commit history
+  history = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+  hist = history
+
+  showconfig = config --list --show-origin
+  findconfig = showconfig
+
+  # rebase on common branches
+  rbd = "!git fetch origin develop:develop && git rebase origin/develop"
+  rbm = "!git fetch origin main:main && git rebase origin/main"
+  rbms = "!git fetch origin master:master && git rebase origin/master"
+
+  # rebase on branch (git rbb main)
+  rbb = "!f(){\
+    git fetch origin $1:$1 && git rebase origin/$1;\
+  }; f"
+
+  # interactive rebase/edit a set number of the previous commits (git rb 4)
+  rb = "!f() { git rebase --no-verify -i HEAD~$1; }; f"
+
+  # undo and unstage a set number of previous commits (git undo 1)
+  undo = "!f() { git reset --soft HEAD^$1; }; f"
+
+  # push branch (git pb main)
+  pushbranch = "!git push --set-upstream origin \"$(git rev-parse --abbrev-ref HEAD)\""
+  pb = "!git pushbranch"
+
+  # force push current branch no verify (git fpb)
+  forcepushbranch = "!git pb --force --no-verify"
+  fpb = "!git forcepushbranch"
+
+  # reset current branch to remote
+  resetbranch = "!git reset --hard origin/$(git rev-parse --abbrev-ref HEAD)"
+
+  # print commit diff with develop
+  developdiff = "!git log --pretty=oneline develop...$1"
+
+  # remove local merged branches
+  cleanup = "!f(){\
+      git branch --merged | egrep -v \"(^\\*|master|main|dev|qa|develop)\" | xargs git branch -d;\
+  }; f"
